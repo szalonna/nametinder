@@ -9,7 +9,8 @@ const firebaseConfig = {
   projectId: "nevtinder",
   storageBucket: "nevtinder.appspot.com",
   messagingSenderId: "984462872094",
-  appId: "1:984462872094:web:2ef66589c9eb3375fe280f"
+  appId: "1:984462872094:web:2ef66589c9eb3375fe280f",
+  measurementId: "G-KX5QLW4QP5"
 };
 
 if (!firebase.apps.length) {
