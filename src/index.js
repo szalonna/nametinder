@@ -1,3 +1,4 @@
+import fs from 'fs';
 import 'regenerator-runtime/runtime';
 import "./styles.css";
 import { fitText } from "./fittext";
@@ -80,7 +81,9 @@ async function swiper(gender) {
     await addUser(id, userId);
   }
 
-  const names = require("./ffi.txt");
+  const names = fs.readFileSync('./src/ffi.txt', 'utf8')
+
+  // const names = require("./ffi.txt");
   const namesArray = names.split("\r\n");
 
   appRoot.innerHTML = `
