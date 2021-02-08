@@ -113,8 +113,6 @@ async function swiper(gender) {
     }
   };
 
-  nameRoot.addEventListener("click", () => displayName());
-
   onNameListChange(id, userId, (val) => {
     alreadySeen = [
       ...Object.values(val.ok || {}),
