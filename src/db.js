@@ -58,3 +58,30 @@ export function onNameListChange(id, uid, cb) {
     cb(data.val());
   });
 }
+
+export function getResults(id) {
+  return db
+    .ref(`${id}/users/`)
+    .once("value")
+    .then((snapshot) => snapshot.val())
+    .then((val) => {
+      return Object.keys(val).reduce((acc, userId) => {
+        if (!val[userId].ok) {
+          return acc;
+        }
+
+        Object.values(val[userId].ok).forEach((name) => {
+          acc[name] = (acc[name] || 0) + 1;
+        });
+        return acc;
+      }, {});
+    })
+    .then((namesWithVote) => {
+      return Object.keys(namesWithVote).reduce((acc, name) => {
+        if (namesWithVote[name] > 1) {
+          return [...acc, name];
+        }
+        return acc;
+      }, []);
+    });
+}

@@ -1,10 +1,11 @@
-import fs from 'fs';
-import 'regenerator-runtime/runtime';
+import fs from "fs";
+import "regenerator-runtime/runtime";
 import "./styles.css";
 import { fitText } from "./fittext";
 import {
   addUser,
   createSubtinder,
+  getResults,
   nameNah,
   nameOk,
   onNameListChange,
@@ -40,29 +41,27 @@ function select() {
   });
 }
 
-function getRandomId(arr) {
-  return Math.floor(Math.random() * arr.length);
-}
-
-function getRandomName(list, blacklist) {
-  console.log(
-    list.length,
-    blacklist.length,
-    (100 * blacklist.length) / list.length
-  );
-
-  if (list.length === blacklist.length) {
-    return false;
-  }
-  let name = "";
-  do {
-    name = list[getRandomId(list)];
-  } while (blacklist.includes(name));
-
-  return name;
-}
-
 async function swiper(gender) {
+  function getRandomId(arr) {
+    return Math.floor(Math.random() * arr.length);
+  }
+
+  function getRandomName(list, blacklist) {
+    document.getElementById("progress").style.width = `${
+      (100 * blacklist.length) / list.length
+    }%`;
+
+    if (list.length === blacklist.length) {
+      return false;
+    }
+    let name = "";
+    do {
+      name = list[getRandomId(list)];
+    } while (blacklist.includes(name));
+
+    return name;
+  }
+
   if (id.length === 0) {
     id = cuid();
     window.location.hash = `#${id}`;
@@ -81,12 +80,12 @@ async function swiper(gender) {
     await addUser(id, userId);
   }
 
-  const names = fs.readFileSync('./src/ffi.txt', 'utf8')
-
-  // const names = require("./ffi.txt");
+  const names = fs.readFileSync("./src/ffi.txt", "utf8");
   const namesArray = names.split("\r\n");
 
   appRoot.innerHTML = `
+    <div id="progress"></div>
+    <div id="results-button">Show results</div>
     <div id="name"></div>
     <div id="ok" class="button">Ok</div>
     <div id="nah" class="button">Nah</div>
@@ -124,8 +123,32 @@ async function swiper(gender) {
     ];
     displayName();
   });
+
+  document
+    .getElementById("results-button")
+    .addEventListener("click", async () => {
+      const results = await getResults(id);
+
+      const modal = document.createElement("div");
+      modal.id = "results-modal";
+      modal.innerHTML = `
+    <div>
+      <h1>Results</h1>
+      <ul id="result-names">
+      ${
+        Array.isArray(results)
+          ? results.map((name) => `<li>${name}</li>`).join("")
+          : "No matches"
+      }
+      </ul>
+      <div id="close">Close</div>
+    </div>`;
+      appRoot.appendChild(modal);
+
+      document.getElementById("close").addEventListener("click", () => {
+        appRoot.removeChild(modal);
+      });
+    });
 }
 
 select();
-
-// swiper("male");
