@@ -27,8 +27,8 @@ function select() {
   appRoot.innerHTML = `
   <div id="title">Select gender</div>
   <div id="select-male" class="button">Male</div>
-  <div id="select-female" class="button">Female</div>
-  `;
+  <div id="select-female" class="button">Female
+  </div>  `;
 
   const title = document.getElementById("title");
   fitText(title);
@@ -87,7 +87,7 @@ async function swiper(gender) {
     <div id="progress"></div>
     <div id="results-button">Show results</div>
     <div id="name"></div>
-    <div id="ok" class="button">Ok</div>
+  <div id="ok" class="button">Ok</div>
     <div id="nah" class="button">Nah</div>
   `;
 
