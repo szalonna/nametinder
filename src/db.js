@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
-import "firebase/database";
+import firebase from "@firebase/app";
+import "@firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC8kUX1QP5d0_QvqnCnVkVCy-5RoVmWjXQ",
@@ -17,6 +17,13 @@ if (!firebase.apps.length) {
 
 const db = firebase.app().database();
 
+export function subtinderExists(id) {
+  return db
+    .ref(`${id}/`)
+    .once("value")
+    .then((snapshot) => !!snapshot.val());
+}
+
 export function createSubtinder(id, gender) {
   return db.ref(`${id}/`).set({
     created: Date.now(),
@@ -29,12 +36,25 @@ export function userExists(id, uid) {
   return db
     .ref(`${id}/users/${uid}/`)
     .once("value")
-    .then((snapshot) => snapshot.val());
+    .then((snapshot) => !!snapshot.val());
 }
 
 export function addUser(id, uid) {
-  console.log(id, uid);
   return db.ref(`${id}/users/${uid}/`).set({
     created: Date.now()
+  });
+}
+
+export function nameOk(id, uid, name) {
+  return db.ref(`${id}/users/${uid}/ok`).push(name);
+}
+
+export function nameNah(id, uid, name) {
+  return db.ref(`${id}/users/${uid}/nah`).push(name);
+}
+
+export function onNameListChange(id, uid, cb) {
+  db.ref(`${id}/users/${uid}/`).on("value", (data) => {
+    cb(data.val());
   });
 }
