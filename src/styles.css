@@ -86,6 +86,7 @@ body {
   padding: 6px 12px;
   background: #c56cf0;
   color: white;
+  z-index: 1000;
 }
 
 #results-modal {
